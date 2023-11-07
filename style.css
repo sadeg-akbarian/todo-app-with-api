@@ -16,6 +16,27 @@ html {
 body {
   margin: 0;
   height: 100vh;
-  background-color: var(--page-background-color);
-  color: var(--page-text-color);
+}
+
+form {
+  margin: 3rem;
+}
+
+.deleteButton {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.toDoList {
+  margin-bottom: 3rem;
+}
+
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+li {
+  font-size: 1.5rem;
 }
