@@ -44,7 +44,7 @@ function renderState() {
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-addToDoButton.addEventListener("click", function (event) {
+addToDoButton.addEventListener("click", function () {
   const inputTextElement = document.querySelector("#inputTextElement");
   const newToDo = {
     description: inputTextElement.value,
@@ -61,9 +61,8 @@ addToDoButton.addEventListener("click", function (event) {
         return response.json();
       }
     })
-    .then((newToDosFromApi) => {
-      localState.push(newToDosFromApi);
-      renderState();
+    .then(() => {
+      requestFromAPI();
     });
 });
 
@@ -86,7 +85,7 @@ toDoList.addEventListener("change", function (event) {
               return response.json();
             }
           })
-          .then((newToDosFromApi) => {
+          .then(() => {
             renderState();
           });
       }
