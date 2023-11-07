@@ -9,7 +9,6 @@ let localState = [];
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 function requestFromAPI() {
-  console.log();
   fetch(backendPath)
     .then((response) => {
       if (response.ok === true) {
@@ -17,9 +16,7 @@ function requestFromAPI() {
       }
     })
     .then((newToDosFromApi) => {
-      console.log(newToDosFromApi);
       localState = newToDosFromApi;
-      console.log(localState);
       renderState();
     });
 }
@@ -30,9 +27,7 @@ requestFromAPI();
 
 function renderState() {
   toDoList.innerHTML = "";
-  console.log(localState);
   localState.forEach((ToDo) => {
-    console.log(ToDo);
     const newLi = document.createElement("li");
     const newCheckbox = document.createElement("input");
     newCheckbox.type = "checkbox";
@@ -56,7 +51,6 @@ addToDoButton.addEventListener("click", function (event) {
     done: false,
   };
   inputTextElement.value = "";
-  console.log(newToDo);
   fetch(backendPath, {
     method: "POST",
     headers: { "Content-type": "application/json" },
@@ -68,7 +62,6 @@ addToDoButton.addEventListener("click", function (event) {
       }
     })
     .then((newToDosFromApi) => {
-      console.log(newToDosFromApi);
       localState.push(newToDosFromApi);
       renderState();
     });
@@ -77,26 +70,12 @@ addToDoButton.addEventListener("click", function (event) {
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 toDoList.addEventListener("change", function (event) {
-  console.log(localState);
-  console.log(event.target);
-  console.log(event.target.id);
-  console.log(event.target.type);
-  console.log(event.target.checked);
   if (event.target.type === "checkbox") {
-    console.log(localState);
     for (let index = 0; index < localState.length; index++) {
       let currentToDo = localState[index];
-      console.log(currentToDo);
-      console.log(currentToDo.id);
-      console.log(event.target.id);
       if (currentToDo.id == event.target.id) {
         const updatedToDo = currentToDo;
-        console.log(updatedToDo);
-        console.log(localState[index]);
         updatedToDo.done = event.target.checked;
-        console.log(updatedToDo);
-        console.log(localState[index]);
-        console.log(backendPath + "/" + event.target.id);
         fetch(backendPath + "/" + event.target.id, {
           method: "PUT",
           headers: { "Content-type": "application/json" },
@@ -108,9 +87,6 @@ toDoList.addEventListener("change", function (event) {
             }
           })
           .then((newToDosFromApi) => {
-            console.log(newToDosFromApi);
-            console.log(localState);
-            console.log("üüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüü");
             renderState();
           });
       }
@@ -121,32 +97,22 @@ toDoList.addEventListener("change", function (event) {
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 deleteButton.addEventListener("click", function () {
-  console.log(localState);
   const checkedArray = [];
   const notCheckedArray = [];
   localState.forEach((ToDo) => {
-    console.log(ToDo);
     if (ToDo.done === true) {
-      console.log(checkedArray);
       checkedArray.push(ToDo);
-      console.log(checkedArray);
     } else {
       notCheckedArray.push(ToDo);
     }
   });
-  console.log(localState);
   checkedArray.forEach((ToDo) => {
     fetch(backendPath + "/" + ToDo.id, {
       method: "DELETE",
     })
-      .then((response) => {
-        response.json();
-      })
+      .then((response) => response.json())
       .then();
   });
-  console.log("öööööööööööööööööööööööööööö");
-  console.log(checkedArray);
-  console.log(notCheckedArray);
   localState = notCheckedArray;
   renderState();
 });
