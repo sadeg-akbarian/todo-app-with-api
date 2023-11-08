@@ -8,23 +8,6 @@ let localState = [];
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-function requestFromAPI() {
-  fetch(backendPath)
-    .then((response) => {
-      if (response.ok === true) {
-        return response.json();
-      }
-    })
-    .then((newToDosFromApi) => {
-      localState = newToDosFromApi;
-      renderState();
-    });
-}
-
-requestFromAPI();
-
-// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 function renderState() {
   toDoList.innerHTML = "";
   localState.forEach((ToDo) => {
@@ -41,6 +24,23 @@ function renderState() {
     toDoList.appendChild(newLi);
   });
 }
+
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+function requestFromAPI() {
+  fetch(backendPath)
+    .then((response) => {
+      if (response.ok === true) {
+        return response.json();
+      }
+    })
+    .then((newToDosFromApi) => {
+      localState = newToDosFromApi;
+      renderState();
+    });
+}
+
+requestFromAPI();
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -86,7 +86,7 @@ toDoList.addEventListener("change", function (event) {
             }
           })
           .then(() => {
-            renderState();
+            requestFromAPI();
           });
       }
     }
@@ -105,13 +105,17 @@ deleteButton.addEventListener("click", function () {
       notCheckedArray.push(ToDo);
     }
   });
-  checkedArray.forEach((ToDo) => {
-    fetch(backendPath + "/" + ToDo.id, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then();
-  });
-  localState = notCheckedArray;
-  renderState();
+  if (checkedArray.length > 0) {
+    for (let i = 0; i < checkedArray.length; i++) {
+      fetch(backendPath + "/" + checkedArray[i].id, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then(() => {
+          if (i === checkedArray.length - 1) {
+            requestFromAPI();
+          }
+        });
+    }
+  }
 });
